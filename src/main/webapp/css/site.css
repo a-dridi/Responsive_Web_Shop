@@ -1,0 +1,44 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 07.06.2020, 23:07:11
+    Author     : ardat
+*/
+
+.sitecontent {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.footersite {
+    background-color: #fffef5; 
+    padding-top: 15px;
+    padding-bottom: 20px;
+    padding-left: 30px; 
+    padding-right: 30px;
+    text-align: center;
+}
+
+.noProductsCreated{
+    padding-left: 20px;
+    padding-left: 20px;
+    text-align: center;
+    display: block;
+}
+
+.noBordersGrid tr, .noBordersGrid td{
+    background: none !important;
+    border: none !important;
+}
+
+.formFieldRow {
+    margin-bottom: 15px;
+}
+
+.texteditor {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <title>#{text.editProduct}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <ui:insert name="header">
+            <ui:include src="includes/head_dependencies.xhtml"/>
+        </ui:insert>
+    </h:head>
+    <h:body>
+        <ui:insert name="mainmenu">
+            <ui:include src="includes/main_menu.xhtml"/>
+        </ui:insert>
+
+        <h3>#{text.editProduct}</h3>
+        <br/>
+
+        <div class="sitecontent">
+
+            <h:form id="editProductsForm">
+                <p:panelGrid columns="2" layout="flex">
+                    <p:outputLabel value="#{text.editProductTitle}"/>
+                    <p:inputText value="#{editProduct.editedProduct.title}" />
+                    <p:outputLabel value="#{text.editProductAvailableAmount}"/>
+                    <p:inputText value="#{editProduct.editedProduct.availableAmount}" />
+                    <p:outputLabel value="#{editProduct.netPriceInfo}"/>
+                    <p:inputText value="#{editProduct.editedProduct.priceCents}" /> 
+                    <p:outputLabel value="#{text.editProductTax}"/>
+                    <p:inputText value="#{editProduct.editedProduct.tax}" /> 
+                    <p:outputLabel value="#{text.editProductAvailableAmount}"/>
+                    <p:spinner value="#{editProduct.editedProduct.availableAmount}" min="0" />
+                    <p:outputLabel value="#{text.editAvailableProduct}"/>
+                    <p:selectBooleanCheckbox value="#{editProduct.editedProduct.available}" itemLabel="#{text.editAvailableProduct}"/>
+                    <p:outputLabel value="#{text.editProductCategory}"/>
+                    <selectOneMenu id="productCategorySelector" value="#{editProduct.editedProduct.category}" converter="productCategoryConverter"
+                                   filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+                        <f:selectItems value="#{editProduct.productCategories}" var="productcategoryItem" itemLabel="#{productcategoryItem.categoryName}" itemValue="#{productcategoryItem}"/>
+                    </selectOneMenu>
+
+                    <p:outputLabel value="#{text.editProductDescription}"/>
+                    <p:textEditor widgetVar="productDescriptionEditor" value="#{editProduct.editedProduct.description}" height="300" style="margin-bottom:10px"/>
+
+                </p:panelGrid>
+                <p:panelGrid columns="3" layout="flex">
+                    <p:outputLabel value="#{text.editProductPicture}"/>
+                    <image href="#{editProduct.editedProduct.productPhotoPath}" />
+                    <h:form enctype="multipart/form-data">        
+                        <p:fileUpload value="#{editProduct.productPhotoFile}" mode="simple" skinSimple="true"/>
+                    </h:form>
+                </p:panelGrid>
+
+                <p:panelGrid columns="2" layout="flex">
+                    <p:commandButton value="#{text.editProductSubmitButton}" ajax="false" action="#{editProduct.saveProductAndProductPhoto()}"/>
+                    <p:commandButton value="#{text.editProductCancelButton}" ajax="false" action="#{editProduct.cancel()}" style="margin-left: 15px" />
+                </p:panelGrid>
+
+            </h:form>
+
+        </div>
+
+        <br/>
+
+        <ui:insert name="footer_container">
+            <ui:include src="includes/footer_global.xhtml"/>
+        </ui:insert>
+    </h:body>
+</html>

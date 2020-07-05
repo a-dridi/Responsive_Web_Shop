@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <title>#{text.checkoutPageTitle} -  #{checkout.shopName}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <ui:insert name="header">
+            <ui:include src="includes/head_dependencies.xhtml"/>
+        </ui:insert>
+    </h:head>
+    <h:body>
+        <ui:insert name="mainmenu">
+            <ui:include src="includes/main_menu.xhtml"/>
+        </ui:insert>
+
+        <div class="sitecontent">
+            <br/>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 style="font-weight: bold">#{text.checkoutPageTitle}</h3>
+                </div>
+            </div>
+            <br/>
+
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <div class="noProductsAdded" rendered="#{checkout.shoppingcartEmpty}">
+                        <h4 style="font-style: italic">#{text.errorNoProductsAdded}</h4>
+                    </div>
+                    <h:form id="newestProductsForm" rendered="#{!checkout.shoppingcartEmpty}">
+                        <p:dataGrid var="checkoutProduct" value="#{checkout.addedProductsAmounts}" columns="1" layout="grid"
+                                    rows="5" paginator="true" id="checkoutProductGrid"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PageLinks}  {LastPageLink}"
+                                    rowsPerPageTemplate="6,12,24,48,96">
+
+                            <f:facet name="header">
+                                #{text.checkoutGridHeader}
+                            </f:facet>
+
+                            <p:panel header="#{checkoutProduct.addedProduct.title}" style="text-align:center">
+                                <h:panelGrid columns="1" style="width:100%">
+                                    <p:graphicImage name="#{checkoutProduct.addedProduct.productPhotoPath}"/> 
+
+                                    <h:outputText value="#{checkoutProduct.addedAmount}X" />
+                                    <h:panelGrid columns="2" style="width:100%">
+                                        <h:outputText value="#{checkoutProduct.addedProduct.priceCents/100}" />
+                                        <h:outputText value="#{checkout.activeCurrency}" />
+                                    </h:panelGrid>
+
+                                    <p:commandButton value="#{text.checkoutRemoveProductButton}" ajax="true" update="newestProductsForm" actionListener="#{checkoutProduct.removeProduct(checkoutProduct)}" icon="fa fa-fw fa-minus-square" style="margin-right:20px;"></p:commandButton>
+                                </h:panelGrid>
+                            </p:panel>
+
+                        </p:dataGrid>
+                    </h:form>
+                </div>
+            </div>
+            <p:panelGrid rendered="#{!checkout.shoppingcartEmpty}">
+                <br/>
+                <hr/>
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-sm-1">
+                        <h:outputText value="#{text.checkoutNetPriceDesc}"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <h:outputText value="#{checkout.netOrderSum/100}"/>
+                    </div>
+                    <div class="col-sm-1">
+                        <h:outputText value="#{text.checkoutVATTaxDesc}"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <h:outputText value="#{checkout.vatOrderSum/100}"/>
+                    </div>
+                    <div class="col-sm-1">
+                        <h:outputText value="#{text.checkoutSumText}" style="font-weight: bold"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <h:outputText value="#{checkout.fullOrderSum/100}" style="font-weight: bold"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <h:outputText value="#{checkout.activeCurrency}"/>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h:form>
+                            <p:commandButton value="#{text.checkoutOrderButton}" icon="fa fa-fw fa-paypal" action="#{checkoutProduct.doCheckout()}" />
+                        </h:form>
+                    </div>
+                </div>
+            </p:panelGrid>
+            <div >
+                <!--AD SPACE-->
+                #{mainShopPage.adSpaceContent}
+            </div>
+            <br/>
+
+        </div>
+
+        <ui:insert name="footer_container">
+            <ui:include src="includes/footer_global.xhtml"/>
+        </ui:insert>
+    </h:body>
+</html>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <title>#{text.addProduct}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <ui:insert name="header">
+            <ui:include src="includes/head_dependencies.xhtml"/>
+        </ui:insert>
+    </h:head>
+    <h:body>
+        <ui:insert name="mainmenu">
+            <ui:include src="includes/main_menu.xhtml"/>
+        </ui:insert>
+
+
+        <div class="sitecontent">
+
+
+            <p:tabMenu activeIndex="2">
+                <p:menuitem value="#{text.adminOrdersProductsTab}" outcome="admin_orders" icon="fa fa-fw fa-shopping-cart">
+                </p:menuitem>
+                <p:menuitem value="#{text.adminManageProductsTab}" outcome="admin_manage" icon="fa fa-fw fa-list-ul">
+                </p:menuitem>
+                <p:menuitem value="#{text.adminAddProductsTab}" outcome="admin_add" icon="fa fa-fw fa-plus-square">
+                </p:menuitem>
+                <p:menuitem value="#{text.adminAddProductsCategoryHeader}" outcome="admin_add_productcategory" icon="fa fa-fw fa-plus-square-o">
+                </p:menuitem>
+                <p:menuitem value="#{text.adminSettingsTab}" outcome="admin_settings" icon="fa fa-fw fa-wrench">
+                </p:menuitem>
+            </p:tabMenu>     
+
+            <h:form id="addProductsForm" enctype="multipart/form-data" style="margin-top: 15px">
+                <p:growl id="addProductDisplay" life="3000"/>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.addProductTitle}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:inputText value="#{adminAddProduct.productTitle}" />
+                    </div>
+                </div>
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.addProductAvailableAmount}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:spinner value="#{adminAddProduct.availableAmount}" min="0" />
+                    </div>
+                </div>
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.addAvailableProduct}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:selectBooleanCheckbox value="#{adminAddProduct.available}" itemLabel="#{text.editAvailableProduct}"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.addProductPrice}"/>
+                    </div>
+                    <div class="col-sm-1">
+                        <p:inputText value="#{adminAddProduct.priceCurrencyUnit}" style="width: 100px"/> 
+                    </div>
+                    <div class="col-sm-1" style="width: 5px">
+                        <h:outputText value="#{adminAddProduct.commaSeperator}" style="width: 5px; height: 20px; font-size: 25px; margin-left: 0px"/>
+                    </div>
+                    <div class="col-sm-1">
+                        <p:inputText value="#{adminAddProduct.priceCentUnit}" style="width: 50px"/> 
+                    </div>
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{adminAddProduct.activeCurrency}"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.addProductTax}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:inputText value="#{adminAddProduct.taxRate}" />
+                    </div>
+                </div>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.addProductDescription}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:textEditor widgetVar="productDescriptionEditor" value="#{adminAddProduct.productDescription}" height="300" style="margin-bottom:10px"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.editProductCategory}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:selectOneMenu  id="selectProductcategories" value="#{adminAddProduct.productCategory}"
+                                          filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="productCategoryConverter">
+                            <f:selectItems value="#{adminAddProduct.productCategories}" var="productcategoryItem" itemLabel="#{productcategoryItem.categoryName}" itemValue="#{productcategoryItem}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.addProductPicture}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:fileUpload value="#{adminAddProduct.productPhotoFile}" mode="simple" skinSimple="true"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-12">
+                        <p:commandButton value="#{text.addProductSubmitButton}" ajax="false" action="#{adminAddProduct.addProduct()}" />
+                    </div>
+                </div>
+            </h:form>
+
+        </div>
+
+        <br/>
+
+        <ui:insert name="footer_container">
+            <ui:include src="includes/footer_global.xhtml"/>
+        </ui:insert>
+    </h:body>
+</html>

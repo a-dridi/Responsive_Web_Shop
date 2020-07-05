@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <title>#{text.registerPageTitle}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <ui:insert name="header">
+            <ui:include src="includes/head_dependencies.xhtml"/>
+        </ui:insert>
+    </h:head>
+    <h:body>
+        <ui:insert name="mainmenu">
+            <ui:include src="includes/main_menu.xhtml"/>
+        </ui:insert>
+
+
+        <div class="sitecontent">
+
+            <br/>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 style="font-weight: bold">#{text.registerPageTitle}</h3>
+                </div>
+            </div>
+            <br/>
+
+            <p:growl id="registerStatusDisplay" life="6000"/>
+
+            <p:panelGrid id="adminAccountAlreadyCreatedInfo" columns="1" layout="flex" rendered="#{!registerController.adminaccountNotCreated}">
+                <h3>#{text.registerAccountAllReadyCreatedInfo}</h3>
+                <p:link outcome="admin_login" value="#{text.registerLoginLink}"/> 
+            </p:panelGrid>
+
+            <h:form id="adminRegisterForm" rendered="#{registerController.adminaccountNotCreated}">
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel for="email" value="#{text.registerEmailDesc}" style="height: 30px"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:inputText id="email" value="#{registerController.email}" required="true" style="height: 30px"/>
+                    </div>
+                </div>
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel for="password1" value="#{text.registerPasswordDesc}" style="height: 30px"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:password id="password1" value="#{registerController.password}" required="true"
+                                    feedback="true"  promptLabel="#{text.registerPasswordPrompt}" weakLabel="#{text.registerWeakPasswordPrompt}"
+                                    goodLabel="#{text.registerGoodPasswordPrompt}" strongLabel="#{text.registerStrongPasswordPrompt}" style="height: 30px"/>
+                    </div>
+                </div>
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel for="password2" value="#{text.registerPasswordConfDesc}" style="height: 30px"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:password id="password2" value="#{registerController.passwordConfirmation}" promptLabel="#{text.registerAgainPasswordPrompt}" required="true" style="height: 30px"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p:commandButton value="#{text.registerRegisterButton}" ajax="false" process="adminRegisterForm" action="#{registerController.register()}"/>
+                    </div>
+                </div>
+            </h:form>
+
+        </div>
+
+        <br/>
+
+        <ui:insert name="footer_container">
+            <ui:include src="includes/footer_global.xhtml"/>
+        </ui:insert>
+    </h:body>
+</html>

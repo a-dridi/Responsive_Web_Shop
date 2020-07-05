@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:head>
+        <title>#{text.orderStatusPageTitle}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <ui:insert name="header">
+            <ui:include src="includes/head_dependencies.xhtml"/>
+        </ui:insert>
+    </h:head>
+    <h:body>
+        <ui:insert name="mainmenu">
+            <ui:include src="includes/main_menu.xhtml"/>
+        </ui:insert>
+
+        <div class="sitecontent">
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="col-sm-10">
+                    <h3 style="font-weight: bold">#{text.orderStatusPageTitle}</h3>
+                </div>
+                <div class="col-sm-2">
+                    <p:button value="#{orderStatus.checkoutButtonText}" outcome="faces/checkout.xhtml" icon="fa fa-fw fa-shopping-cart" /> 
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4>#{text.orderStatusPageFormInfo}</h4>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <p:growl id="orderstatusErrorDisplay" life="6000"/>
+
+            <h:form id="myorderstatusForm">
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.orderStatusEmailDesc}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:inputText value="#{orderStatus.email}" />
+                    </div>
+                </div>
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.orderStatusOrderNumberDesc}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:inputText value="#{orderStatus.orderNumber}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p:commandButton value="#{text.orderStatusSubmitButton}" ajax="true" actionListener="#{orderStatus.loadStatus()}" update="orderStatusInformationForm" style="margin-top: 15px"/>
+                    </div>
+                </div>
+
+            </h:form>
+
+            <br/>
+
+            <h:form id="orderStatusInformationForm" rendered="#{orderStatus.orderStatusLoaded}">
+                <hr/>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1" style="font-weight: bold">
+                        <h:outputText value="#{text.orderStatusStatusOrderNumberDesc}"/>
+                    </div>
+                    <div class="col-sm-11" style="font-weight: bold">
+                        <h:outputText value="#{orderStatus.selectedOrderByUser.toString}" />
+                    </div>
+                </div>
+                <div class="row formFieldRow">
+                    <div class="col-sm-1" style="font-weight: bold">
+                        <h:outputText value="#{text.orderStatusStatusOrderSumDesc}"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <h:outputText value="#{orderStatus.selectedOrderByUser.sumCent/100}" />
+                    </div>
+                    <div class="col-sm-3">
+                        <h:outputText value="#{orderStatus.selectedOrderByUser.currency}" />
+                    </div>
+                </div>
+                <div class="row formFieldRow">
+                    <div class="col-sm-1" style="font-weight: bold">
+                        <h:outputText value="#{text.orderStatusStatusCustomerAddressDesc}"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <h:outputText value="#{orderStatus.selectedOrderByUser.customer.forename}" />
+                        <h:outputText value="#{orderStatus.selectedOrderByUser.customer.surname}" />
+
+                    </div>
+                    <div class="col-sm-3">
+                        <h:outputText value="#{orderStatus.selectedOrderByUser.customer.street}" />
+                        <h:outputText value="#{orderStatus.selectedOrderByUser.customer.county}" />
+                        <h:outputText value="#{orderStatus.selectedOrderByUser.customer.postcode}" />
+                        <h:outputText value="#{orderStatus.selectedOrderByUser.customer.country}" />
+                    </div>
+                </div>
+
+                <p:dataGrid var="orderedProductsItem" value="#{orderStatus.selectedOrderedProducts}" columns="1" layout="grid"
+                            rows="6" paginator="true" id="orderedProductsGrid"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PageLinks}  {LastPageLink}"
+                            rowsPerPageTemplate="6,12,24,48,96">
+
+                    <f:facet name="header">
+                        #{text.orderedProductsGridHeader}
+                    </f:facet>
+
+                    <p:panel header="#{orderedProductsItem.product.title}" style="text-align:center">
+                        <h:panelGrid columns="1" style="width:100%">
+                            <p:graphicImage name="#{orderedProductsItem.product.productPhotoPath}" height="50px"/> 
+                            <h:outputText value="#{orderedProductsItem.amount}X" />
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" style="width:100%">
+                            <h:outputText value="#{orderedProductsItem.priceCent/100}" />
+                            <h:outputText value="#{orderStatus.selectedOrderByUser.currency}" />
+                        </h:panelGrid>
+
+                    </p:panel>
+
+                </p:dataGrid>
+            </h:form>
+
+        </div>
+
+        <ui:insert name="footer_container">
+            <ui:include src="includes/footer_global.xhtml"/>
+        </ui:insert>
+    </h:body>
+</html>

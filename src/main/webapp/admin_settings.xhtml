@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <title>#{text.adminSettings}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <ui:insert name="header">
+            <ui:include src="includes/head_dependencies.xhtml"/>
+        </ui:insert>
+    </h:head>
+    <h:body>
+        <ui:insert name="mainmenu">
+            <ui:include src="includes/main_menu.xhtml"/>
+        </ui:insert>
+
+
+        <div class="sitecontent">
+            <p:tabMenu activeIndex="4">
+                <p:menuitem value="#{text.adminOrdersProductsTab}" outcome="admin_orders" icon="fa fa-fw fa-shopping-cart">
+                </p:menuitem>
+                <p:menuitem value="#{text.adminManageProductsTab}" outcome="admin_manage" icon="fa fa-fw fa-list-ul">
+                </p:menuitem>
+                <p:menuitem value="#{text.adminAddProductsTab}" outcome="admin_add" icon="fa fa-fw fa-plus-square">
+                </p:menuitem>
+                <p:menuitem value="#{text.adminAddProductsCategoryHeader}" outcome="admin_add_productcategory" icon="fa fa-fw fa-plus-square-o">
+                </p:menuitem>
+                <p:menuitem value="#{text.adminSettingsTab}" outcome="admin_settings" icon="fa fa-fw fa-wrench">
+                </p:menuitem>
+            </p:tabMenu>     
+
+
+            <h:form id="settingsForm" style="margin-top: 15px">
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.settingsShopNameDesc}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:inputText value="#{adminSettingsController.shopNameValue}" />
+                    </div>
+                </div>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.settingsActiveCurrencyDesc}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <selectOneMenu id="currencySelector" value="#{adminSettingsController.selectedCurrencyValue}" 
+                                       filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+                            <f:selectItems value="#{adminSettingsController.currencyList}" var="currencyItem" itemLabel="#{currencyItem}" itemValue="#{currencyItem}"/>
+                        </selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.settingsCommaValueDesc}"/>
+                    </div>
+                    <div class="col-sm-11">
+
+                        <p:selectOneRadio id="commavalueTypeRadio" value="#{adminSettingsController.selectedCommaValue}" style="font-size: 25px">
+                            <f:selectItem itemLabel="," itemValue="comma" />
+                            <f:selectItem itemLabel="." itemValue="point" />
+                        </p:selectOneRadio>
+                    </div>
+                </div>
+
+                <br/>
+                <br/>
+
+                <div class="row formFieldRow texteditor">
+                    <div class="col-sm-12">
+                        <p:outputLabel value="#{text.settingsAdSpaceDesc}"/>
+                    </div>
+                    <div class="col-sm-12">
+                        <p:textEditor widgetVar="adSpaceEditor" value="#{adminSettingsController.adSpaceContentValue}" height="300" style="margin-bottom:2px"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow texteditor">
+                    <div class="col-sm-12">
+                        <p:outputLabel value="#{text.settingsPrivacyNoticeDesc}"/>
+                    </div>
+                    <div class="col-sm-12">
+                        <p:textEditor widgetVar="privacyNoticeEditor" value="#{adminSettingsController.privacyPolicyValue}" height="300" style="margin-bottom:2px"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow texteditor">
+                    <div class="col-sm-12">
+                        <p:outputLabel value="#{text.settingsLegalNoticeDesc}"/>
+                    </div>
+                    <div class="col-sm-12">
+                        <p:textEditor widgetVar="legalNoticeEditor" value="#{adminSettingsController.legalNoticeValue}" height="300" style="margin-bottom:2px"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow texteditor">
+                    <div class="col-sm-12">
+                        <p:outputLabel value="#{text.settingsContactDesc}"/>
+                    </div>
+                    <div class="col-sm-12">
+                        <p:textEditor widgetVar="contactEditor" value="#{adminSettingsController.contactValue}" height="300" style="margin-bottom:2px"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow">
+                    <div class="col-sm-12">
+                        <p:commandButton value="#{text.settingsSubmitButton}" ajax="false" action="#{adminSettingsController.saveSettings()}" />
+                    </div>
+                </div>
+
+            </h:form>
+
+        </div>
+
+        <br/>
+
+        <ui:insert name="footer_container">
+            <ui:include src="includes/footer_global.xhtml"/>
+        </ui:insert>
+    </h:body>
+</html>

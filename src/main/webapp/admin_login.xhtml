@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>#{text.loginPageTitle}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <ui:insert name="header">
+            <ui:include src="includes/head_dependencies.xhtml"/>
+        </ui:insert>
+    </h:head>
+    <h:body>
+        <ui:insert name="mainmenu">
+            <ui:include src="includes/main_menu.xhtml"/>
+        </ui:insert>
+
+
+        <div class="sitecontent">
+
+            <br/>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 style="font-weight: bold">#{text.loginPageTitle}</h3>
+                </div>
+            </div>
+            <br/>
+
+
+            <p:growl id="loginStatusDisplay" life="6000"/>
+
+            <p:panelGrid id="noAdminAccountCreatedInfo" columns="1" layout="flex" rendered="#{!loginController.adminaccountCreated}">
+                <h3>#{text.loginNoAccountCreatedInfo}</h3>
+                <p:link outcome="admin_register" value="#{text.loginNoAccountCreatedLink}" style="color: blue"/> 
+            </p:panelGrid>
+
+            <h:form id="adminLoginForm" rendered="#{loginController.adminaccountCreated}">
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.loginEmailFieldDesc}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:inputText value="#{loginController.email}" />
+                    </div>
+                </div>
+                <div class="row formFieldRow">
+                    <div class="col-sm-1">
+                        <p:outputLabel value="#{text.loginPasswortFieldDesc}"/>
+                    </div>
+                    <div class="col-sm-11">
+                        <p:password value="#{loginController.password}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p:commandButton value="#{text.loginLoginButton}" ajax="false" action="#{loginController.login()}" style="margin-top: 15px"/>
+                    </div>
+                </div>
+            </h:form>
+
+        </div>
+
+        <br/>
+
+        <ui:insert name="footer_container">
+            <ui:include src="includes/footer_global.xhtml"/>
+        </ui:insert>
+    </h:body>
+</html>
