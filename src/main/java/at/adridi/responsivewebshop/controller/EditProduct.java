@@ -6,11 +6,13 @@
 package at.adridi.responsivewebshop.controller;
 
 import at.adridi.responsivewebshop.model.Product;
+import at.adridi.responsivewebshop.model.ProductCategory;
 import at.adridi.responsivewebshop.model.dao.ProductCategoryDAO;
 import at.adridi.responsivewebshop.model.dao.ProductDAO;
 import at.adridi.responsivewebshop.model.dao.SettingsDAO;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,7 +23,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.enterprise.context.Dependent;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.file.UploadedFile;
@@ -32,8 +36,8 @@ import org.primefaces.shaded.commons.io.FilenameUtils;
  * @author A.Dridi
  */
 @Named(value = "editProduct")
-@Dependent
-public class EditProduct {
+@ViewScoped
+public class EditProduct implements Serializable {
 
     @Inject
     private HttpServletRequest httpServletRequest;
@@ -44,38 +48,59 @@ public class EditProduct {
 
     private String activeCurrency;
     ResourceBundle text = FacesContext.getCurrentInstance().getApplication().getResourceBundle(FacesContext.getCurrentInstance(), "text");
-    private List<String> productCategories;
+    private List<ProductCategory> productCategories;
+
     private UploadedFile productPhotoFile;
     private String netPriceInfo;
+    private boolean productDoesNotExist = false;
+    private String commaSeperator; //Comma or point used for seperation of cent value. 
+    private String priceCurrencyUnit; //Integer currency value (USD; Euro, etc.)
+    private String priceCentUnit; //Comma currency value (Pennies, Cents, etc.)
 
     public EditProduct() {
 
         this.httpServletRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String uri = httpServletRequest.getRequestURI();
-        try {
-            Integer productIdParsed = Integer.parseInt(uri.split("=")[1]);
-            this.editedProduct = this.productDao.getProductById(productIdParsed);
-            if (this.editedProduct == null) {
-                throw new ArrayIndexOutOfBoundsException("Product does not exist!");
-            }
-        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/responsiveWebShop/");
-                return;
-            } catch (IOException ex) {
-                Logger.getLogger(ViewProduct.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        Integer productIdParsed = Integer.parseInt(httpServletRequest.getParameter("product_id"));
+        this.editedProduct = this.productDao.getProductById(productIdParsed);
+        if (this.editedProduct == null) {
+            this.productDoesNotExist = true;
         }
-        this.activeCurrency = text.getString("currencyText") + " (" + this.settingsDao.getSettingBySettingkey("selectedCurrency").getSettingValue() + ")";
-        this.productCategories = this.productCategoryDao.getAllProductCategoryName();
 
+        this.activeCurrency = " (" + this.settingsDao.getSettingBySettingkey("selectedCurrency").getSettingValue() + ")";
+        this.productCategories = this.productCategoryDao.getAllProductCategory();
         this.netPriceInfo = text.getString("netpriceInfoText") + this.activeCurrency;
+
+        try {
+            if (this.settingsDao.getSettingBySettingkey("floatNumberFormatting").getSettingValue().equals("comma")) {
+                this.commaSeperator = ",";
+            } else {
+                //US style format with point instead of comma (ex.: 22.24)
+                this.commaSeperator = ".";
+            }
+        } catch (NullPointerException e) {
+            this.commaSeperator = ".";
+        }
+
+        //Parse price integer values (unit: usd, euro) and comma values (pennies, cent) from price value of the database. 
+        this.priceCurrencyUnit = String.valueOf(((int) (this.editedProduct.getPriceCents() / 100)));
+        this.priceCentUnit = String.valueOf(((int) (this.editedProduct.getPriceCents() % 100)));
+
     }
 
     /**
      * Save product in database and save product photo (replace existing)
      */
     public void saveProductAndProductPhoto() {
+
+        int parsedCentPrice;
+        try {
+            parsedCentPrice = (int) (Double.parseDouble(this.priceCurrencyUnit + "." + this.priceCentUnit) * 100);
+        } catch (NullPointerException | NumberFormatException e) {
+            FacesContext.getCurrentInstance().addMessage("editProductsForm", new FacesMessage(FacesMessage.SEVERITY_ERROR, text.getString("errorEnterCorrectPrice"), null));
+            return;
+        }
+        editedProduct.setPriceCents(parsedCentPrice);
+
         this.productDao.updateProduct(editedProduct);
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("/responsiveWebShop/faces/admin_manage.xhtml");
@@ -111,11 +136,11 @@ public class EditProduct {
         this.editedProduct = editedProduct;
     }
 
-    public List<String> getProductCategories() {
+    public List<ProductCategory> getProductCategories() {
         return productCategories;
     }
 
-    public void setProductCategories(List<String> productCategories) {
+    public void setProductCategories(List<ProductCategory> productCategories) {
         this.productCategories = productCategories;
     }
 
@@ -149,6 +174,38 @@ public class EditProduct {
 
     public void setNetPriceInfo(String netPriceInfo) {
         this.netPriceInfo = netPriceInfo;
+    }
+
+    public boolean isProductDoesNotExist() {
+        return productDoesNotExist;
+    }
+
+    public void setProductDoesNotExist(boolean productDoesNotExist) {
+        this.productDoesNotExist = productDoesNotExist;
+    }
+
+    public String getCommaSeperator() {
+        return commaSeperator;
+    }
+
+    public void setCommaSeperator(String commaSeperator) {
+        this.commaSeperator = commaSeperator;
+    }
+
+    public String getPriceCurrencyUnit() {
+        return priceCurrencyUnit;
+    }
+
+    public void setPriceCurrencyUnit(String priceCurrencyUnit) {
+        this.priceCurrencyUnit = priceCurrencyUnit;
+    }
+
+    public String getPriceCentUnit() {
+        return priceCentUnit;
+    }
+
+    public void setPriceCentUnit(String priceCentUnit) {
+        this.priceCentUnit = priceCentUnit;
     }
 
 }

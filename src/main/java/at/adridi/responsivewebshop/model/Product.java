@@ -12,8 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
@@ -36,10 +38,9 @@ public class Product implements Serializable {
     private Integer priceCents;
     private Integer tax = 0;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "product_category_id")
+    @ManyToOne(optional = false, cascade=CascadeType.ALL)
+    //@JoinColumn(name = "product_category_id")
     private ProductCategory category;
-    @Lob
     private String description;
     private String productPhotoPath;
     //Product that can be downloaded - true: if this is not a physical product

@@ -26,92 +26,101 @@ and open the template in the editor.
         <div class="sitecontent">
             <br/>
             <div class="row">
-            <div class="col-sm-12">
-                <p:commandButton value="#{mainShopPage.selectedLanguageName}"  icon="fa fa-fw fa-globe" type="button" onclick="PF('languageSelector').show();" />
+                <div class="col-sm-12">
+                    <p:commandButton value="#{mainShopPage.selectedLanguageName}"  icon="fa fa-fw fa-globe" type="button" onclick="PF('languageSelector').show();" />
+                </div>
+                <p:dialog header="Select Language" widgetVar="languageSelector" modal="true" height="300">
+                    <h:form>
+                        <p:commandButton value="#{text.languageEn}" ajax="false" action="#{mainShopPage.changeSelectedLanguage(0)}" style="margin-top: 15px"/>
+                        <br/>
+                        <p:commandButton value="#{text.languageDe}" ajax="false" action="#{mainShopPage.changeSelectedLanguage(1)}" style="margin-top: 15px"/>
+                        <br/>
+                        <p:commandButton value="#{text.languageFr}" ajax="false" action="#{mainShopPage.changeSelectedLanguage(2)}" style="margin-top: 15px"/>
+                        <br/>
+                        <p:commandButton value="#{text.languageEs}" ajax="false" action="#{mainShopPage.changeSelectedLanguage(3)}" style="margin-top: 15px"/>
+                        <br/>
+                        <p:commandButton value="#{text.languageZh}" ajax="false" action="#{mainShopPage.changeSelectedLanguage(4)}" style="margin-top: 15px"/>
+                    </h:form>
+                </p:dialog>   
             </div>
-            <p:dialog header="Select Language" widgetVar="languageSelector" modal="true" height="300">
-                <h:form>
-                    <p:commandButton value="#{text.languageEn}" ajax="false" action="#{mainShopPage.changeSelectedLanguage(0)}" style="margin-top: 15px"/>
-                    <br/>
-                    <p:commandButton value="#{text.languageDe}" ajax="false" action="#{mainShopPage.changeSelectedLanguage(1)}" style="margin-top: 15px"/>
-                </h:form>
-            </p:dialog>   
-        </div>
-        <br/>
-        <br/>
-        <div class="row">
-            <div class="col-sm-10">
-                <h3 style="font-weight: bold">#{text.homePageTitle}</h3>
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="col-sm-10">
+                    <h3 style="font-weight: bold">#{text.homePageTitle}</h3>
+                </div>
+                <div class="col-sm-2">
+                    <p:button value="#{mainShopPage.checkoutButtonText}" outcome="faces/checkout.xhtml" icon="fa fa-fw fa-shopping-cart" /> 
+                </div>
             </div>
-            <div class="col-sm-2">
-                <p:button value="#{mainShopPage.checkoutButtonText}" outcome="faces/checkout.xhtml" icon="fa fa-fw fa-shopping-cart" /> 
+            <br/>
+
+            <p:outputPanel rendered="#{!mainShopPage.allProductsAvailable}">
+                <div class="noProductsCreated" >
+                    <h4 style="font-style: italic">#{text.errorNoProductsCreated}</h4>
+                </div>
+            </p:outputPanel>
+
+            <h:form id="newestProductsForm" rendered="#{mainShopPage.newestProductsAvailable}">
+                <p:dataGrid var="newproduct" value="#{mainShopPage.newestProducts}" columns="3" layout="grid"
+                            rows="3" paginator="true" id="newproducts"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PageLinks}  {LastPageLink}"
+                            rowsPerPageTemplate="6,12,24,48,96">
+
+                    <f:facet name="header">
+                        #{text.homeNewestProducts}
+                    </f:facet>
+
+                    <p:panel header="#{newproduct.title}" style="text-align:center">
+                        <h:panelGrid columns="1" style="width:100%">
+                            <p:graphicImage url="images/productphotos/#{allproduct.product_id}.jpg"/> 
+
+                            <h:outputText value="#{newproduct.category}" />
+
+                            <p:linkButton outcome="view_product" value="#{text.homeViewProductButton}" icon="fa fa-fw fa-external-link" style="margin-right:20px;">
+                                <f:param name="product_id" value="#{newproduct.product_id}" />
+                            </p:linkButton>
+                        </h:panelGrid>
+                    </p:panel>
+
+                </p:dataGrid>
+            </h:form>
+
+            <br/>
+            <div >
+                <!--AD SPACE-->
+                #{mainShopPage.adSpaceContent}
             </div>
+            <br/>
+
+            <h:form id="allProductsForm" rendered="#{mainShopPage.allProductsAvailable}">
+                <p:dataGrid var="allproduct" value="#{mainShopPage.allProducts}" columns="4" layout="grid"
+                            rows="12" paginator="true" id="allproducts"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="6,12,24,48,96">
+
+                    <f:facet name="header">
+                        #{text.homeAllProducts}
+                    </f:facet>
+
+                    <p:panel header="#{allproduct.title}" style="text-align:center">
+                        <h:panelGrid columns="1" style="width:100%">
+                            <p:graphicImage url="images/productphotos/#{allproduct.product_id}.jpg"/> 
+
+                            <h:outputText value="#{allproduct.category}" />
+
+                            <p:linkButton outcome="view_product" value="#{text.homeViewProductButton}" icon="fa fa-fw fa-external-link" style="margin-right:20px;">
+                                <f:param name="product_id" value="#{allproduct.product_id}" />
+                            </p:linkButton>
+                        </h:panelGrid>
+                    </p:panel>
+
+                </p:dataGrid>
+            </h:form>
         </div>
-        <br/>
 
-        <div class="noProductsCreated" rendered="#{!mainShopPage.allProductsAvailable}">
-            <h4 style="font-style: italic">#{text.errorNoProductsCreated}</h4>
-        </div>
-        <h:form id="newestProductsForm" rendered="#{mainShopPage.newestProductsAvailable}">
-            <p:dataGrid var="newproduct" value="#{mainShopPage.newestProducts}" columns="3" layout="grid"
-                        rows="3" paginator="true" id="newproducts"
-                        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PageLinks}  {LastPageLink}"
-                        rowsPerPageTemplate="6,12,24,48,96">
-
-                <f:facet name="header">
-                    #{text.homeNewestProducts}
-                </f:facet>
-
-                <p:panel header="#{newproduct.title}" style="text-align:center">
-                    <h:panelGrid columns="1" style="width:100%">
-                        <p:graphicImage name="#{viewProduct.openedProduct.productPhotoPath}"/> 
-
-                        <h:outputText value="#{newproduct.category}" />
-
-                        <p:linkButton outcome="viewProduct" value="#{text.homeViewProductButton}" icon="fa fa-fw fa-external-link" style="margin-right:20px;">
-                            <f:param name="product_id" value="#{newproduct.product_id}" />
-                        </p:linkButton>
-                    </h:panelGrid>
-                </p:panel>
-
-            </p:dataGrid>
-        </h:form>
-
-        <br/>
-        <div >
-            <!--AD SPACE-->
-            #{mainShopPage.adSpaceContent}
-        </div>
-        <br/>
-
-        <h:form id="allProductsForm" rendered="#{mainShopPage.allProductsAvailable}">
-            <p:dataGrid var="allproduct" value="#{mainShopPage.allProducts}" columns="4" layout="grid"
-                        rows="12" paginator="true" id="allproducts"
-                        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                        rowsPerPageTemplate="6,12,24,48,96">
-
-                <f:facet name="header">
-                    #{text.homeAllProducts}
-                </f:facet>
-
-                <p:panel header="#{allproduct.title}" style="text-align:center">
-                    <h:panelGrid columns="1" style="width:100%">
-                        <p:graphicImage name="images/productphotos/#{allproduct.product_id}.jpg"/> 
-
-                        <h:outputText value="#{allproduct.category}" />
-
-                        <p:linkButton outcome="viewProduct" value="#{text.homeViewProductButton}" icon="pi pi-external-link" style="margin-right:20px;">
-                            <f:param name="product_id" value="#{allproduct.product_id}" />
-                        </p:linkButton>
-                    </h:panelGrid>
-                </p:panel>
-
-            </p:dataGrid>
-        </h:form>
-    </div>
-
-    <ui:insert name="footer_container">
-        <ui:include src="includes/footer_global.xhtml"/>
-    </ui:insert>
-</h:body>
+        <ui:insert name="footer_container">
+            <ui:include src="includes/footer_global.xhtml"/>
+        </ui:insert>
+    </h:body>
 </html>

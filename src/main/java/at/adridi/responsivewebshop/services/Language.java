@@ -32,10 +32,11 @@ public class Language implements Serializable {
      */
     public static List<Language> getAllLanguages() {
         List<Language> languagesList = new ArrayList<>();
-
         languagesList.add(new Language("English", Locale.ENGLISH, "en"));
         languagesList.add(new Language("German", Locale.GERMAN, "de"));
-
+        languagesList.add(new Language("Français", Locale.GERMAN, "fr"));
+        languagesList.add(new Language("Español", Locale.GERMAN, "es"));
+        languagesList.add(new Language("中文简体", Locale.GERMAN, "zh"));
         return languagesList;
     }
 

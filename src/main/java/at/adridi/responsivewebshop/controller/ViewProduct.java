@@ -55,10 +55,19 @@ public class ViewProduct {
      * redirect to the home page.
      */
     public ViewProduct() {
+        //Load items in checkout and create checkout button text
+        ShoppingCart currentShoppingCartState = new ShoppingCart();
+        this.checkoutButtonText = currentShoppingCartState.getShoppingCartStatusString();
+
         this.httpServletRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String uri = httpServletRequest.getRequestURI();
-        Integer productIdParsed = Integer.parseInt(httpServletRequest.getParameter("product_id"));
-
+        Integer productIdParsed;
+        try {
+            productIdParsed = Integer.parseInt(httpServletRequest.getParameter("product_id"));
+        } catch (NumberFormatException e) {
+            this.productDoesNotExist = true;
+            return;
+        }
         this.openedProduct = this.productDao.getProductById(productIdParsed);
         if (this.openedProduct == null) {
             this.productDoesNotExist = true;
@@ -73,10 +82,10 @@ public class ViewProduct {
 
         //Format price (which is in cent) to double value with comma or points for comma values according to the settings. 
         if (this.settingsDao.getSettingBySettingkey("floatNumberFormatting") != null && this.settingsDao.getSettingBySettingkey("floatNumberFormatting").getSettingValue().equals("comma")) {
-            this.productPriceDisplayed = String.format(Locale.GERMAN, "%.2f", (this.openedProduct.getPriceCents() / 100));
+            this.productPriceDisplayed = String.format(Locale.GERMAN, "%.2f", (((double) this.openedProduct.getPriceCents() / 100)));
         } else {
             //US style format with point instead of comma (ex.: 22.24)
-            this.productPriceDisplayed = String.format(Locale.US, "%.2f", (this.openedProduct.getPriceCents() / 100));
+            this.productPriceDisplayed = String.format(Locale.US, "%.2f", (((double) this.openedProduct.getPriceCents() / 100)));
         }
         if (this.settingsDao.getSettingBySettingkey("adSpaceContent") != null) {
             this.adSpaceContent = this.settingsDao.getSettingBySettingkey("adSpaceContent").getSettingValue();
@@ -85,9 +94,6 @@ public class ViewProduct {
         //TVA info
         this.tvaInfo = "(" + this.openedProduct.getTax() + " %" + this.text.getString("tvaInfoText") + ")";
 
-        //Load items in checkout and create checkout button text
-        ShoppingCart currentShoppingCartState = new ShoppingCart();
-        this.checkoutButtonText = currentShoppingCartState.getShoppingCartStatusString();
     }
 
     /**
@@ -170,6 +176,5 @@ public class ViewProduct {
     public void setProductDoesNotExist(boolean productDoesNotExist) {
         this.productDoesNotExist = productDoesNotExist;
     }
-    
-    
+
 }
