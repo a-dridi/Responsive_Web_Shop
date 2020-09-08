@@ -67,7 +67,6 @@ and open the template in the editor.
                         <p:outputLabel value="#{text.settingsCommaValueDesc}"/>
                     </div>
                     <div class="col-sm-11">
-
                         <p:selectOneRadio id="commavalueTypeRadio" value="#{adminSettingsController.selectedCommaValue}" style="font-size: 25px">
                             <f:selectItem itemLabel="," itemValue="comma" />
                             <f:selectItem itemLabel="." itemValue="point" />
@@ -111,6 +110,24 @@ and open the template in the editor.
                     </div>
                     <div class="col-sm-12">
                         <p:textEditor widgetVar="contactEditor" value="#{adminSettingsController.contactValue}" height="300" style="margin-bottom:2px"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow texteditor">
+                    <div class="col-sm-12">
+                        <p:outputLabel value="#{text.settingsHeaderCompanyNameDesc}"/>
+                    </div>
+                    <div class="col-sm-12">
+                        <p:textEditor widgetVar="headerCompanyNameEditor" value="#{adminSettingsController.companyNameValue}" height="100" style="margin-bottom:2px"/>
+                    </div>
+                </div>
+
+                <div class="row formFieldRow texteditor">
+                    <div class="col-sm-12">
+                        <p:outputLabel value="#{text.settingsHeaderContactInfoDesc}"/>
+                    </div>
+                    <div class="col-sm-12">
+                        <p:textEditor widgetVar="headerContactInfoEditor" value="#{adminSettingsController.contactInfoValue}" height="100" style="margin-bottom:2px"/>
                     </div>
                 </div>
 

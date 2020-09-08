@@ -5,6 +5,7 @@
  */
 package at.adridi.responsivewebshop.controller;
 
+import at.adridi.responsivewebshop.constants.ProductPicture;
 import at.adridi.responsivewebshop.model.Product;
 import at.adridi.responsivewebshop.model.ProductCategory;
 import at.adridi.responsivewebshop.model.dao.ProductCategoryDAO;
@@ -98,24 +99,36 @@ public class AdminAddProduct implements Serializable {
         newProduct.setCategory(this.productCategory);
         newProduct.setAvailableAmount(this.availableAmount);
         newProduct.setAvailable(this.available);
-        if (this.productDao.addProduct(newProduct)) {
-            Path productsPhotoFolder = Paths.get("/images/productsphoto/");
-            String productphotoFilename = FilenameUtils.getBaseName(this.productPhotoFile.getFileName());
-            String productphotoExtension = FilenameUtils.getExtension(this.productPhotoFile.getFileName());
-            try ( InputStream productPhotoInput = this.productPhotoFile.getInputStream()) {
-                Path productphotoFile = Files.createTempFile(productsPhotoFolder, productphotoFilename, "." + productphotoExtension);
-                Files.copy(productPhotoInput, productphotoFile, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException ex) {
-                Logger.getLogger(EditProduct.class.getName()).log(Level.SEVERE, null, ex);
+        Path productsPhotoFolder = Paths.get(ProductPicture.PRODUCT_PICTURE_PATH);
+        String productphotoFilename = "";
+        String productphotoExtension = "";
+
+        if (this.productPhotoFile != null) {
+            productphotoFilename = FilenameUtils.getBaseName(this.productPhotoFile.getFileName());
+            productphotoExtension = FilenameUtils.getExtension(this.productPhotoFile.getFileName());
+            try {
+                newProduct.setProductPhotoPath(ProductPicture.PRODUCT_PICTURE_PATH.concat(productphotoFilename).concat(".").concat(productphotoExtension));
+            } catch (NullPointerException e) {
+                this.productPhotoFile = null;
             }
-            System.out.println("PRODUCT OK ADDED");
-            FacesContext.getCurrentInstance().addMessage("addProductDisplay", new FacesMessage(FacesMessage.SEVERITY_INFO, text.getString("okProductSaved"), null));
+        } 
+
+        if (this.productDao.addProduct(newProduct)) {
+            //Save uploaded product picture
+            if (this.productPhotoFile != null) {
+                try ( InputStream productPhotoInput = this.productPhotoFile.getInputStream()) {
+                    Path productphotoFile = Files.createTempFile(productsPhotoFolder, productphotoFilename, "." + productphotoExtension);
+                    Files.copy(productPhotoInput, productphotoFile, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException ex) {
+                    Logger.getLogger(EditProduct.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("PRODUCT OK ADDED");
+                FacesContext.getCurrentInstance().addMessage("addProductDisplay", new FacesMessage(FacesMessage.SEVERITY_INFO, text.getString("okProductSaved"), null));
+            }
         } else {
             System.out.println("PRODUCT FAIL ADDED");
             FacesContext.getCurrentInstance().addMessage("addProductDisplay", new FacesMessage(FacesMessage.SEVERITY_ERROR, text.getString("errorProductSaved"), null));
-
         }
-
     }
 
     public String getTaxRate() {

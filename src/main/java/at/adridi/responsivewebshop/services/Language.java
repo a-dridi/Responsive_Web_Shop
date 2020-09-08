@@ -25,6 +25,16 @@ public class Language implements Serializable {
     private Locale languageLocale;
     private String languageIsoCode;
 
+    public Language(String languageName, Locale languageLocale, String languageIsoCode) {
+        this.languageName = languageName;
+        this.languageLocale = languageLocale;
+        this.languageIsoCode = languageIsoCode;
+    }
+
+    public Language() {
+
+    }
+
     /**
      * All available languages - Languages List
      *
@@ -33,16 +43,18 @@ public class Language implements Serializable {
     public static List<Language> getAllLanguages() {
         List<Language> languagesList = new ArrayList<>();
         languagesList.add(new Language("English", Locale.ENGLISH, "en"));
-        languagesList.add(new Language("German", Locale.GERMAN, "de"));
-        languagesList.add(new Language("Français", Locale.GERMAN, "fr"));
-        languagesList.add(new Language("Español", Locale.GERMAN, "es"));
-        languagesList.add(new Language("中文简体", Locale.GERMAN, "zh"));
+        languagesList.add(new Language("Deutsch", Locale.GERMAN, "de"));
+        languagesList.add(new Language("Français", Locale.FRENCH, "fr"));
+        languagesList.add(new Language("Español", new Locale("es", "ES"), "es"));
+        languagesList.add(new Language("中文简体", Locale.CHINESE, "zh"));
+        languagesList.add(new Language("한국어", Locale.KOREAN, "ko"));
         return languagesList;
     }
 
     /**
      * Locale Language that is selected in this app. If not set, then load the
-     * available language of browser client user. Default: English
+     * available language of browser client user. Default: English. Language is
+     * saved in session as an id. English has the id 0.
      */
     public static void loadConfiguredLocale() {
         String userLanguageCode;
@@ -69,9 +81,13 @@ public class Language implements Serializable {
             FacesContext.getCurrentInstance().getViewRoot().setLocale(Locale.ENGLISH);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("appLanguageIndex", 0);
         }
-
     }
 
+    /**
+     * Sets selected language and saves it in the session.
+     *
+     * @param selectedLanguageListIndex
+     */
     public static void setConfiguredLocale(int selectedLanguageListIndex) {
         if (Language.getAllLanguages().get(selectedLanguageListIndex).getLanguageIsoCode() != null) {
             FacesContext.getCurrentInstance().getViewRoot().setLocale(Language.getAllLanguages().get(selectedLanguageListIndex).getLanguageLocale());
@@ -82,10 +98,13 @@ public class Language implements Serializable {
         }
     }
 
-    public Language(String languageName, Locale languageLocale, String languageIsoCode) {
-        this.languageName = languageName;
-        this.languageLocale = languageLocale;
-        this.languageIsoCode = languageIsoCode;
+    public static String getSelectedLanguageName() {
+        try {
+            int selectedLanguageIndex = (int) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("appLanguageIndex");
+            return Language.getAllLanguages().get(selectedLanguageIndex).getLanguageName();
+        } catch (NullPointerException e) {
+            return FacesContext.getCurrentInstance().getViewRoot().getLocale().getDisplayLanguage();
+        }
     }
 
     public String getLanguageName() {
@@ -110,10 +129,6 @@ public class Language implements Serializable {
 
     public void setLanguageIsoCode(String languageIsoCode) {
         this.languageIsoCode = languageIsoCode;
-    }
-
-    public Language() {
-
     }
 
     @Override

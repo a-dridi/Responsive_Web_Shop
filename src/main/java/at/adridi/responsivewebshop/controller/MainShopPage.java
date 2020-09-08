@@ -34,11 +34,11 @@ import javax.faces.view.ViewScoped;
 @Named(value = "mainShopPage")
 @ViewScoped
 public class MainShopPage implements Serializable {
-    
+
     private SettingsDAO settingsDao = new SettingsDAO();
     private ProductCategoryDAO productCategoryDao = new ProductCategoryDAO();
     private ProductDAO productDao = new ProductDAO();
-    
+
     private List<ProductCategory> productCategories;
     private int productsViewerPosition = 0;
     private int numberOfDisplayedProducts = 20;
@@ -54,6 +54,8 @@ public class MainShopPage implements Serializable {
     private Locale selectedLanguageIsoCode;
     private boolean adminUserSessionActive = false;
     private String selectedLanguageName = "English";
+    private String companyName = "";
+    private String contactInfo = "";
 
     /**
      * Creates a new instance of MainShopPage
@@ -77,22 +79,27 @@ public class MainShopPage implements Serializable {
         if (this.settingsDao.getSettingBySettingkey("shopName") != null) {
             this.shopName = this.settingsDao.getSettingBySettingkey("shopName").getSettingValue();
         }
+        if (this.settingsDao.getSettingBySettingkey("headerCompanyName") != null) {
+            this.companyName = this.settingsDao.getSettingBySettingkey("headerCompanyName").getSettingValue();
+        }
+        if (this.settingsDao.getSettingBySettingkey("headerContactInfo") != null) {
+            this.contactInfo = this.settingsDao.getSettingBySettingkey("headerContactInfo").getSettingValue();
+        }
         ShoppingCart currentShoppingCartState = new ShoppingCart();
         this.checkoutButtonText = currentShoppingCartState.getShoppingCartStatusString();
-        this.selectedLanguageName = FacesContext.getCurrentInstance().getViewRoot().getLocale().getDisplayLanguage();
+        this.selectedLanguageName = Language.getSelectedLanguageName();
     }
-    
+
     public void changeSelectedLanguage(int selectedLanguageListIndex) {
         Language.setConfiguredLocale(selectedLanguageListIndex);
-        
+
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/faces/index.xhtml");
         } catch (IOException ex) {
             Logger.getLogger(MainShopPage.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
     }
-    
+
     public void checkAdminAccountSession() {
         try {
             Boolean adminUserLoggedinState = (Boolean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("adminuserloggedin");
@@ -103,7 +110,7 @@ public class MainShopPage implements Serializable {
             //this.adminUserSessionActive = false;
         }
     }
-    
+
     public void insertDefaultDataToDatabase() {
         if (this.settingsDao.getSettingBySettingkey("shopName") == null) {
             Settings newSettings = new Settings("shopName", "My Shop");
@@ -118,9 +125,13 @@ public class MainShopPage implements Serializable {
             this.settingsDao.addSettings(newSettings);
             newSettings = new Settings("contact", text.getString("settingsContactDesc"));
             this.settingsDao.addSettings(newSettings);
+            newSettings = new Settings("headerCompanyName", "Company Name");
+            this.settingsDao.addSettings(newSettings);
+            newSettings = new Settings("headerContactInfo", "📞 +00 123456789 - 📧 email@email.td");
+            this.settingsDao.addSettings(newSettings);
         }
     }
-    
+
     public void openCheckoutPage() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/faces/checkout.xhtml");
@@ -128,125 +139,141 @@ public class MainShopPage implements Serializable {
             Logger.getLogger(MainShopPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
+    }
+
     public ResourceBundle getText() {
         return text;
     }
-    
+
     public void setText(ResourceBundle text) {
         this.text = text;
     }
-    
+
     public List<Language> getLanguagesList() {
         return languagesList;
     }
-    
+
     public void setLanguagesList(List<Language> languagesList) {
         this.languagesList = languagesList;
     }
-    
+
     public List<ProductCategory> getProductCategories() {
         return productCategories;
     }
-    
+
     public void setProductCategories(List<ProductCategory> productCategories) {
         this.productCategories = productCategories;
     }
-    
+
     public int getProductsViewerPosition() {
         return productsViewerPosition;
     }
-    
+
     public void setProductsViewerPosition(int productsViewerPosition) {
         this.productsViewerPosition = productsViewerPosition;
     }
-    
+
     public int getNumberOfDisplayedProducts() {
         return numberOfDisplayedProducts;
     }
-    
+
     public void setNumberOfDisplayedProducts(int numberOfDisplayedProducts) {
         this.numberOfDisplayedProducts = numberOfDisplayedProducts;
     }
-    
+
     public List<Product> getNewestProducts() {
         return newestProducts;
     }
-    
+
     public void setNewestProducts(List<Product> newestProducts) {
         this.newestProducts = newestProducts;
     }
-    
+
     public List<Product> getAllProducts() {
         return allProducts;
     }
-    
+
     public void setAllProducts(List<Product> allProducts) {
         this.allProducts = allProducts;
     }
-    
+
     public String getShopName() {
         return shopName;
     }
-    
+
     public void setShopName(String shopName) {
         this.shopName = shopName;
     }
-    
+
     public boolean isNewestProductsAvailable() {
         return newestProductsAvailable;
     }
-    
+
     public void setNewestProductsAvailable(boolean newestProductsAvailable) {
         this.newestProductsAvailable = newestProductsAvailable;
     }
-    
+
     public boolean isAllProductsAvailable() {
         return allProductsAvailable;
     }
-    
+
     public void setAllProductsAvailable(boolean allProductsAvailable) {
         this.allProductsAvailable = allProductsAvailable;
     }
-    
+
     public String getAdSpaceContent() {
         return adSpaceContent;
     }
-    
+
     public void setAdSpaceContent(String adSpaceContent) {
         this.adSpaceContent = adSpaceContent;
     }
-    
+
     public String getCheckoutButtonText() {
         return checkoutButtonText;
     }
-    
+
     public void setCheckoutButtonText(String checkoutButtonText) {
         this.checkoutButtonText = checkoutButtonText;
     }
-    
+
     public Locale getSelectedLanguageIsoCode() {
         return selectedLanguageIsoCode;
     }
-    
+
     public void setSelectedLanguageIsoCode(Locale selectedLanguageIsoCode) {
         this.selectedLanguageIsoCode = selectedLanguageIsoCode;
     }
-    
+
     public boolean isAdminUserSessionActive() {
         return adminUserSessionActive;
     }
-    
+
     public void setAdminUserSessionActive(boolean adminUserSessionActive) {
         this.adminUserSessionActive = adminUserSessionActive;
     }
-    
+
     public String getSelectedLanguageName() {
         return selectedLanguageName;
     }
-    
+
     public void setSelectedLanguageName(String selectedLanguageName) {
         this.selectedLanguageName = selectedLanguageName;
     }
-    
+
 }

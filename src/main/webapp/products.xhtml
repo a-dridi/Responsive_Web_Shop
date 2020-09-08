@@ -12,7 +12,7 @@ and open the template in the editor.
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <h:head>
-        <title>#{productsCategory.selectedProductCategory.categoryName}</title>
+        <title>#{productsCategory.selectedProductCategory.categoryName} - #{productsCategory.shopName}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <ui:insert name="header">
             <ui:include src="includes/head_dependencies.xhtml"/>
@@ -41,23 +41,23 @@ and open the template in the editor.
             </p:outputPanel>
 
             <h:form id="productsCategoryForm" rendered="#{!productsCategory.categoryDoesNotExist}">
-                <p:dataGrid var="allproduct" value="#{productsCategory.productsOfCategory}" columns="4" layout="grid"
-                            rows="12" paginator="true" id="productsOfCategory"
+                <p:dataGrid var="productsOfCertainCategory" value="#{productsCategory.productsOfCategory}" columns="4" layout="grid"
+                            rows="12" paginator="true" id="products"
                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                            rowsPerPageTemplate="6,12,24,48,96">
+                            rowsPerPageTemplate="6,12,24,48,96" emptyMessage="#{text.emptyNoProducts}">
 
                     <f:facet name="header">
-                        #{text.homeAllProducts}
+                        #{productsCategory.selectedProductCategory.categoryName}
                     </f:facet>
 
-                    <p:panel header="#{productsOfCategory.title}" style="text-align:center">
+                    <p:panel header="#{productsOfCertainCategory.title}" style="text-align:center">
                         <h:panelGrid columns="1" style="width:100%">
-                            <p:graphicImage name="images/productsphoto/#{productsOfCategory.product_id}.jpg"/> 
+                            <p:outputPanel rendered="#{productsOfCertainCategory.productPhotoPath}">
+                                <img src="#{productsOfCertainCategory.productPhotoPath}" style="margin-bottom: 5px" /> 
+                            </p:outputPanel>
 
-                            <h:outputText value="#{productsOfCategory.category}" />
-
-                            <p:linkButton outcome="viewProduct" value="#{text.homeViewProductButton}" icon="fa fa-fw fa-external-link" style="margin-right:20px;">
-                                <f:param name="product_id" value="#{productsOfCategory.product_id}" />
+                            <p:linkButton outcome="view_product" value="#{text.homeViewProductButton}" icon="fa fa-fw fa-external-link" style="margin-right:20px;">
+                                <f:param name="product_id" value="#{productsOfCertainCategory.product_id}" />
                             </p:linkButton>
                         </h:panelGrid>
                     </p:panel>
@@ -68,7 +68,7 @@ and open the template in the editor.
             <br/>
             <div >
                 <!--AD SPACE-->
-                #{productsOfCategory.adSpaceContent}
+                <h:outputText value="#{productsOfCategory.adSpaceContent}" escape="false"/>
             </div>
             <br/>
 

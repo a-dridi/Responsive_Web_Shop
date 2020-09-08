@@ -12,7 +12,7 @@ and open the template in the editor.
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <h:head>
-        <title>#{viewProduct.productName}</title>
+        <title>#{viewProduct.openedProduct.title} - #{productsCategory.shopName}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <ui:insert name="header">
             <ui:include src="includes/head_dependencies.xhtml"/>
@@ -46,18 +46,19 @@ and open the template in the editor.
             <h:form rendered="#{!viewProduct.productDoesNotExist}">
                 <div class="row">
                     <div class="col-sm-7">
-                        <p:graphicImage name="#{viewProduct.openedProduct.productPhotoPath}"/> 
-                        <h:outputText value="#{viewProduct.openedProduct.description}"/>
+                        <p:outputPanel rendered="#{viewProduct.openedProduct.productPhotoPath}">
+                            <img src="#{viewProduct.openedProduct.productPhotoPath}" style="margin-bottom: 10px" /> 
+                        </p:outputPanel>
+                        <h:outputText value="#{viewProduct.openedProduct.description}" escape="false"/>
                         <h5>#{text.categoryText} #{viewProduct.openedProduct.category} </h5>
                     </div>
                     <div class="col-sm-3">
                         <div class="jumbotron">
                             <h:panelGrid rendered="#{viewProduct.openedProduct.available}"><h3 style="color: green">#{text.productAvailableText}</h3>
                                 <h3 style="font-weight: 400">#{viewProduct.productPriceDisplayed} #{viewProduct.activeCurrency} #{viewProduct.tvaInfo}</h3>
-                                <h:form style="margin-top: 20px">
-                                    <p:spinner value="#{viewProduct.addedAmount}" min="1" max="#{viewProduct.openedProduct.availableAmount}"/>
-                                    <p:commandButton value="#{text.addToCardText}" update="infoDisplay" action="#{viewProduct.addProductToCard()}"/>
-                                </h:form>
+                                    <p:spinner value="#{viewProduct.addedAmount}" min="1" max="#{viewProduct.openedProduct.availableAmount}" style="width: 45px"/>
+                                    <br/>
+                                    <p:commandButton value="#{text.addToCardText}" update="infoDisplay" action="#{viewProduct.addProductToCard()}" ajax="false" style="margin-top: 5px;"/>
                             </h:panelGrid>
                             <h:panelGrid rendered="#{!viewProduct.openedProduct.available}"><h3 style="color: red">#{text.productNotAvailableText}</h3></h:panelGrid>
                         </div>
@@ -67,10 +68,9 @@ and open the template in the editor.
             <br/>
             <div >
                 <!--AD SPACE-->
-                #{viewProduct.adSpaceContent}
+                <h:outputText value="#{viewProduct.adSpaceContent}" escape="false"/>
             </div>
             <br/>
-
         </div>
 
         <ui:insert name="footer_container">

@@ -55,62 +55,60 @@ public class CustomerDAO implements AutoCloseable, Serializable {
     public boolean addCustomer(Customer customer) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.save(customer);
             transaction.commit();
-            returnValue = true;
-
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in addCustomer(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean deleteCustomer(Customer customer) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.delete(customer);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in deleteCustomer(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean updateCustomer(Customer customer) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.update(customer);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in updateCustomer(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 

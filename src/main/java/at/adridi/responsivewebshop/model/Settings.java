@@ -9,9 +9,7 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.OneToMany;
+import javax.persistence.Lob;
 
 /**
  *
@@ -22,7 +20,7 @@ public class Settings implements Serializable{
 
     @Id
     private String settingkey;
-
+    @Lob
     private String settingValue;
 
     public Settings(String settingkey, String settingValue) {

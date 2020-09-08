@@ -41,6 +41,7 @@ public class Product implements Serializable {
     @ManyToOne(optional = false, cascade=CascadeType.ALL)
     //@JoinColumn(name = "product_category_id")
     private ProductCategory category;
+    @Lob
     private String description;
     private String productPhotoPath;
     //Product that can be downloaded - true: if this is not a physical product

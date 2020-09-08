@@ -3,10 +3,10 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
-/* 
-    Created on : 07.06.2020, 23:07:11
-    Author     : ardat
-*/
+
+body {
+    color: black;
+}
 
 .sitecontent {
     margin-left: 20px;
@@ -14,7 +14,7 @@ and open the template in the editor.
 }
 
 .footersite {
-    background-color: #fffef5; 
+    background-color: #fbf7d6; 
     padding-top: 15px;
     padding-bottom: 20px;
     padding-left: 30px; 
@@ -41,4 +41,62 @@ and open the template in the editor.
 .texteditor {
     margin-top: 5px;
     margin-bottom: 15px;
+}
+
+.navbar-brand{
+    color: black;
+    height: 40px;
+}
+
+.top-contact-header{
+    display: flex;
+    background-color: #fbf7d6; 
+    padding: 10px;
+}
+
+.nav-item a {
+    color: black;
+}
+
+.nav-item.active {
+    border-bottom: 2px solid #8a28a6;
+    font-weight: bold;
+}
+
+.navbar-nav > li{
+    height: 25px;
+}
+
+.navbar-nav > li > a {
+    padding-top: 0px;
+    padding-bottom: 5px;
+}
+
+.nav-item:hover {
+    border-bottom: 2px solid #8a28a6;
+    color: #8a28a6;
+    transition: all 0.1s ease-in-out;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: black !important;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #8a28a6 !important;
+}
+
+
+.nav-link:hover{
+    color: #8a28a6 !important;
+}
+
+.ui-menuitem-text {
+    padding-left: 3px;
+    vertical-align: middle;
+    padding-top: 3px;
+}
+
+.product-entry{
+    margin-bottom: 5px;
 }

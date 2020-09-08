@@ -5,6 +5,7 @@
  */
 package at.adridi.responsivewebshop.controller;
 
+import at.adridi.responsivewebshop.constants.ProductPicture;
 import at.adridi.responsivewebshop.model.Product;
 import at.adridi.responsivewebshop.model.ProductCategory;
 import at.adridi.responsivewebshop.model.dao.ProductCategoryDAO;
@@ -22,7 +23,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -58,7 +58,6 @@ public class EditProduct implements Serializable {
     private String priceCentUnit; //Comma currency value (Pennies, Cents, etc.)
 
     public EditProduct() {
-
         this.httpServletRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         Integer productIdParsed = Integer.parseInt(httpServletRequest.getParameter("product_id"));
         this.editedProduct = this.productDao.getProductById(productIdParsed);
@@ -84,14 +83,12 @@ public class EditProduct implements Serializable {
         //Parse price integer values (unit: usd, euro) and comma values (pennies, cent) from price value of the database. 
         this.priceCurrencyUnit = String.valueOf(((int) (this.editedProduct.getPriceCents() / 100)));
         this.priceCentUnit = String.valueOf(((int) (this.editedProduct.getPriceCents() % 100)));
-
     }
 
     /**
      * Save product in database and save product photo (replace existing)
      */
     public void saveProductAndProductPhoto() {
-
         int parsedCentPrice;
         try {
             parsedCentPrice = (int) (Double.parseDouble(this.priceCurrencyUnit + "." + this.priceCentUnit) * 100);
@@ -101,6 +98,22 @@ public class EditProduct implements Serializable {
         }
         editedProduct.setPriceCents(parsedCentPrice);
 
+        Path productsPhotoFolder = Paths.get(ProductPicture.PRODUCT_PICTURE_PATH);
+        String productphotoFilename = "";
+        String productphotoExtension = "";
+        if (this.productPhotoFile != null) {
+            productphotoFilename = FilenameUtils.getBaseName(this.productPhotoFile.getFileName());
+            productphotoExtension = FilenameUtils.getExtension(this.productPhotoFile.getFileName());
+
+            try {
+                editedProduct.setProductPhotoPath(ProductPicture.PRODUCT_PICTURE_PATH.concat(productphotoFilename).concat(".").concat(productphotoExtension));
+            } catch (NullPointerException e) {
+                editedProduct.setProductPhotoPath("");
+            }
+        } else {
+            editedProduct.setProductPhotoPath("");
+        }
+
         this.productDao.updateProduct(editedProduct);
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("/responsiveWebShop/faces/admin_manage.xhtml");
@@ -108,16 +121,13 @@ public class EditProduct implements Serializable {
             Logger.getLogger(EditProduct.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Path productsPhotoFolder = Paths.get("/images/productsphoto/");
-        String productphotoFilename = FilenameUtils.getBaseName(this.productPhotoFile.getFileName());
-        String productphotoExtension = FilenameUtils.getExtension(this.productPhotoFile.getFileName());
+        //Save upload product picture
         try ( InputStream productPhotoInput = this.productPhotoFile.getInputStream()) {
             Path productphotoFile = Files.createTempFile(productsPhotoFolder, productphotoFilename, "." + productphotoExtension);
             Files.copy(productPhotoInput, productphotoFile, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
             Logger.getLogger(EditProduct.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     public void cancel() {

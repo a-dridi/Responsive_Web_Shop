@@ -96,62 +96,60 @@ public class OrderDAO implements AutoCloseable, Serializable {
     public boolean addOrder(Order order) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.save(order);
             transaction.commit();
-            returnValue = true;
-
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in addOrder(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean deleteOrder(Order order) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.delete(order);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in deleteOrder(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean updateOrder(Order order) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.update(order);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in updateOrder(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 

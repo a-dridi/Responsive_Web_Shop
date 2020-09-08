@@ -11,11 +11,8 @@ import at.adridi.responsivewebshop.model.dao.ProductCategoryDAO;
 import at.adridi.responsivewebshop.model.dao.ProductDAO;
 import at.adridi.responsivewebshop.model.dao.SettingsDAO;
 import at.adridi.responsivewebshop.services.ShoppingCart;
-import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.enterprise.context.Dependent;
 import javax.faces.context.ExternalContext;
@@ -46,6 +43,7 @@ public class ProductsCategory {
     @Inject
     private ExternalContext externalContext;
     private boolean categoryDoesNotExist = false;
+    private String shopName = "My Shop";
 
     /**
      * Creates a new instance of ProductsCategory
@@ -55,20 +53,20 @@ public class ProductsCategory {
 
         try {
             Integer categoryIdParsed = Integer.parseInt(httpServletRequest.getParameter("category"));
-            this.productsOfCategory = this.productDao.getProductByProductCategory(categoryIdParsed);
+            this.productsOfCategory = this.productDao.getProductListByProductCategory(categoryIdParsed);
             this.selectedProductCategory = this.productCategoryDao.getProductCategoryById(categoryIdParsed);
-            if (this.selectedProductCategory == null) {
-                throw new ArrayIndexOutOfBoundsException("Product category does not exist!");
-            }
-
-        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+        } catch (NullPointerException | NumberFormatException e) {
+            System.out.println("Product category does not exist!");
             this.categoryDoesNotExist = true;
         }
 
         if (this.settingsDao.getSettingBySettingkey("adSpaceContent") != null) {
             this.adSpaceContent = this.settingsDao.getSettingBySettingkey("adSpaceContent").getSettingValue();
         }
-
+        if (this.settingsDao.getSettingBySettingkey("shopName") != null) {
+            this.shopName = this.settingsDao.getSettingBySettingkey("shopName").getSettingValue();
+        }
+        
         //Load items in checkout and create checkout button text
         ShoppingCart currentShoppingCartState = new ShoppingCart();
         this.checkoutButtonText = currentShoppingCartState.getShoppingCartStatusString();
@@ -113,4 +111,13 @@ public class ProductsCategory {
     public void setCheckoutButtonText(String checkoutButtonText) {
         this.checkoutButtonText = checkoutButtonText;
     }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
 }

@@ -41,7 +41,7 @@ and open the template in the editor.
                 <p:dataGrid var="allproduct" value="#{adminManageProducts.allProducts}" columns="3" layout="grid"
                             rows="9" paginator="true" id="newproducts"
                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PageLinks}  {LastPageLink}"
-                            rowsPerPageTemplate="6,12,24,48,96">
+                            rowsPerPageTemplate="6,12,24,48,96" emptyMessage="#{text.emptyNoProductsCreated}">
 
                     <f:facet name="header">
                         #{text.manageAllProductsHeader}
@@ -51,14 +51,13 @@ and open the template in the editor.
 
                     <p:panel header="#{allproduct.title}" style="text-align:center">
                         <h:panelGrid columns="2" style="width:100%">
-                            <h:outputText value="#{text.manageProductTitle}"/>
-                            <p:inputText value="#{allproduct.title}"/>
-                            <h:outputText value="#{text.manageProductAvailableAmount}"/>
-                            <p:spinner value="#{allproduct.availableAmount}" min="0" />
-                            <h:outputText value="#{text.manageProductPrice}"/>
-                            <p:spinner value="#{allproduct.priceCents/100}" min="0" stepFactor="0.01"/>
-
-                            <hr></hr>
+                            <h:outputText value="#{text.manageProductTitle}" class="product-entry"/>
+                            <p:inputText value="#{allproduct.title}" class="product-entry"/>
+                            <h:outputText value="#{text.manageProductAvailableAmount}" class="product-entry"/>
+                            <p:spinner value="#{allproduct.availableAmount}" min="0" class="product-entry"/>
+                            <h:outputText value="#{text.manageProductPrice}" class="product-entry"/>
+                            <p:spinner value="#{allproduct.priceCents/100}" min="0" stepFactor="0.01" class="product-entry"/>
+                            <br />
                             <br />
                             <h:outputText value="#{allproduct.category}" />
                             <br />

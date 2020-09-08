@@ -12,7 +12,7 @@ and open the template in the editor.
       xmlns:h="http://java.sun.com/jsf/html">
 
     <h:head>
-        <title>#{text.orderStatusPageTitle}</title>
+        <title>#{text.orderStatusPageTitle} - #{orderStatus.shopName}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <ui:insert name="header">
             <ui:include src="includes/head_dependencies.xhtml"/>
@@ -32,6 +32,7 @@ and open the template in the editor.
                 </div>
                 <div class="col-sm-2">
                     <p:button value="#{orderStatus.checkoutButtonText}" outcome="faces/checkout.xhtml" icon="fa fa-fw fa-shopping-cart" /> 
+                    
                 </div>
             </div>
             <br/>
@@ -114,7 +115,7 @@ and open the template in the editor.
                 <p:dataGrid var="orderedProductsItem" value="#{orderStatus.selectedOrderedProducts}" columns="1" layout="grid"
                             rows="6" paginator="true" id="orderedProductsGrid"
                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PageLinks}  {LastPageLink}"
-                            rowsPerPageTemplate="6,12,24,48,96">
+                            rowsPerPageTemplate="6,12,24,48,96" emptyMessage="#{text.emptyNoOrders}">
 
                     <f:facet name="header">
                         #{text.orderedProductsGridHeader}

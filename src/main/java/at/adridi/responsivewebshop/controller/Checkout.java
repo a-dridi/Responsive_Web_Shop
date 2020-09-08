@@ -11,6 +11,7 @@ import at.adridi.responsivewebshop.model.dao.OrderDAO;
 import at.adridi.responsivewebshop.model.dao.SettingsDAO;
 import at.adridi.responsivewebshop.services.CheckoutProduct;
 import at.adridi.responsivewebshop.services.PaypalCredentials;
+import at.adridi.responsivewebshop.services.ShoppingCart;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -87,6 +88,8 @@ public class Checkout implements Serializable {
                 orderNewNumber = (allDoneOrders.size()) + 1;
             }
         }
+        ShoppingCart currentShoppingCartState = new ShoppingCart();
+        this.checkoutButtonText = currentShoppingCartState.getShoppingCartStatusString();
     }
 
     public void removeProduct(CheckoutProduct removedCheckoutProduct) {
@@ -119,6 +122,14 @@ public class Checkout implements Serializable {
 
     }
 
+    /**
+     * Creates an OrderRequest to the payment gateway "Paypal": Add all ordered
+     * products to the request. User is redirect to the payment process in
+     * Paypal. If the payment was successfull, then the order is processed and
+     * user is redirected to "order_success.xhtml". If payment failed, then the user is redirect to the site "order_canceled.xhtml". 
+     *
+     * @return
+     */
     public OrderRequest createOrderRequest() {
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.checkoutPaymentIntent("CAPTURE");
@@ -168,7 +179,6 @@ public class Checkout implements Serializable {
         orderRequest.purchaseUnits(purchaseUnitRequestsList);
         this.newUnconfirmedOrder.setOrderedProducts(orderedProducts);
         return orderRequest;
-
     }
 
     public String getActiveCurrency() {

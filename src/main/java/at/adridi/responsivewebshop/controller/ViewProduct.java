@@ -48,6 +48,7 @@ public class ViewProduct {
     private String checkoutButtonText = "";
     private String tvaInfo;
     private boolean productDoesNotExist = false;
+    private String shopName = "My Shop";
 
     /**
      * Load product (price formatted according to settings, selected currency,
@@ -59,8 +60,13 @@ public class ViewProduct {
         ShoppingCart currentShoppingCartState = new ShoppingCart();
         this.checkoutButtonText = currentShoppingCartState.getShoppingCartStatusString();
 
+        try {
+            this.activeCurrency = this.settingsDao.getSettingBySettingkey("selectedCurrency").getSettingValue();
+        } catch (NullPointerException e) {
+            this.activeCurrency = "USD";
+        }
+
         this.httpServletRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String uri = httpServletRequest.getRequestURI();
         Integer productIdParsed;
         try {
             productIdParsed = Integer.parseInt(httpServletRequest.getParameter("product_id"));
@@ -74,12 +80,6 @@ public class ViewProduct {
             return;
         }
 
-        try {
-            this.activeCurrency = this.settingsDao.getSettingBySettingkey("selectedCurrency").getSettingValue();
-        } catch (NullPointerException e) {
-            this.activeCurrency = "USD";
-        }
-
         //Format price (which is in cent) to double value with comma or points for comma values according to the settings. 
         if (this.settingsDao.getSettingBySettingkey("floatNumberFormatting") != null && this.settingsDao.getSettingBySettingkey("floatNumberFormatting").getSettingValue().equals("comma")) {
             this.productPriceDisplayed = String.format(Locale.GERMAN, "%.2f", (((double) this.openedProduct.getPriceCents() / 100)));
@@ -90,10 +90,12 @@ public class ViewProduct {
         if (this.settingsDao.getSettingBySettingkey("adSpaceContent") != null) {
             this.adSpaceContent = this.settingsDao.getSettingBySettingkey("adSpaceContent").getSettingValue();
         }
+        if (this.settingsDao.getSettingBySettingkey("shopName") != null) {
+            this.shopName = this.settingsDao.getSettingBySettingkey("shopName").getSettingValue();
+        }
 
-        //TVA info
-        this.tvaInfo = "(" + this.openedProduct.getTax() + " %" + this.text.getString("tvaInfoText") + ")";
-
+        //VAT info
+        this.tvaInfo = "(" + this.openedProduct.getTax() + "% " + this.text.getString("tvaInfoText") + ")";
     }
 
     /**
@@ -175,6 +177,14 @@ public class ViewProduct {
 
     public void setProductDoesNotExist(boolean productDoesNotExist) {
         this.productDoesNotExist = productDoesNotExist;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
 }

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
@@ -34,6 +33,8 @@ public class AdminSettingsController implements Serializable {
     private String privacyPolicyValue = "";
     private String legalNoticeValue = "";
     private String contactValue = "";
+    private String companyNameValue = "";
+    private String contactInfoValue = "";
     ResourceBundle text = FacesContext.getCurrentInstance().getApplication().getResourceBundle(FacesContext.getCurrentInstance(), "text");
 
     private List<String> currencyList = Currencies.currencyList;
@@ -47,10 +48,14 @@ public class AdminSettingsController implements Serializable {
             this.privacyPolicyValue = this.settingsDao.getSettingBySettingkey("privacyPolicy").getSettingValue();
             this.legalNoticeValue = this.settingsDao.getSettingBySettingkey("legalNotice").getSettingValue();
             this.contactValue = this.settingsDao.getSettingBySettingkey("contact").getSettingValue();
+            this.contactValue = this.settingsDao.getSettingBySettingkey("headerCompanyName").getSettingValue();
+            this.contactInfoValue = this.settingsDao.getSettingBySettingkey("headerContactInfo").getSettingValue();
         } catch (NullPointerException e) {
             this.privacyPolicyValue = text.getString("privacypolicyPageTitle");
             this.legalNoticeValue = text.getString("legalnoticePageTitle");
             this.contactValue = text.getString("contactPageTitle");
+            this.companyNameValue = "Company Name";
+            this.contactInfoValue = "📞 +00 123456789 - 📧 email@email.td";
         }
     }
 
@@ -68,6 +73,10 @@ public class AdminSettingsController implements Serializable {
         updateSetting = new Settings("legalNotice", this.legalNoticeValue);
         this.settingsDao.updateSettings(updateSetting);
         updateSetting = new Settings("contact", this.contactValue);
+        this.settingsDao.updateSettings(updateSetting);
+        updateSetting = new Settings("headerCompanyName", this.companyNameValue);
+        this.settingsDao.updateSettings(updateSetting);
+        updateSetting = new Settings("headerContactInfo", this.contactInfoValue);
         this.settingsDao.updateSettings(updateSetting);
     }
 
@@ -135,6 +144,22 @@ public class AdminSettingsController implements Serializable {
         this.contactValue = contactValue;
     }
 
+    public String getCompanyNameValue() {
+        return companyNameValue;
+    }
+
+    public void setCompanyNameValue(String companyNameValue) {
+        this.companyNameValue = companyNameValue;
+    }
+
+    public String getContactInfoValue() {
+        return contactInfoValue;
+    }
+
+    public void setContactInfoValue(String contactInfoValue) {
+        this.contactInfoValue = contactInfoValue;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
@@ -146,6 +171,8 @@ public class AdminSettingsController implements Serializable {
         hash = 17 * hash + Objects.hashCode(this.privacyPolicyValue);
         hash = 17 * hash + Objects.hashCode(this.legalNoticeValue);
         hash = 17 * hash + Objects.hashCode(this.contactValue);
+        hash = 17 * hash + Objects.hashCode(this.companyNameValue);
+        hash = 17 * hash + Objects.hashCode(this.contactInfoValue);
         hash = 17 * hash + Objects.hashCode(this.text);
         hash = 17 * hash + Objects.hashCode(this.currencyList);
         return hash;
@@ -184,6 +211,12 @@ public class AdminSettingsController implements Serializable {
         if (!Objects.equals(this.contactValue, other.contactValue)) {
             return false;
         }
+        if (!Objects.equals(this.companyNameValue, other.companyNameValue)) {
+            return false;
+        }
+        if (!Objects.equals(this.contactInfoValue, other.contactInfoValue)) {
+            return false;
+        }
         if (!Objects.equals(this.settingsDao, other.settingsDao)) {
             return false;
         }
@@ -194,8 +227,6 @@ public class AdminSettingsController implements Serializable {
             return false;
         }
         return true;
-    }
-
-    
-    
+    }   
+ 
 }

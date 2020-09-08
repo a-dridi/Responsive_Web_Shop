@@ -88,75 +88,76 @@ public class ProductCategoryDAO implements AutoCloseable, Serializable {
     public boolean insertProductCategory(String productCategoryname) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
-            if (productCategoryname != null && !productCategoryname.trim().equals("")) {
-                ProductCategory newProductCategory = new ProductCategory();
-                newProductCategory.setCategoryName(productCategoryname);
-
-                String productCategoryAlias = productCategoryname.replace(" ", "_");
-                productCategoryAlias = productCategoryAlias.replace("/", "_");
-                productCategoryAlias = productCategoryAlias.replace("\\", "_");
-                productCategoryAlias = productCategoryAlias.replace("=", "_");
-                productCategoryAlias = productCategoryAlias.replace("\"", "_");
-                productCategoryAlias = productCategoryAlias.replace("'", "_");
-                productCategoryAlias = productCategoryAlias.replace("`", "_");
-
-                newProductCategory.setAlias(productCategoryAlias);
-                transaction = session.beginTransaction();
-                session.save(newProductCategory);
-                transaction.commit();
-                returnValue = true;
+            if (productCategoryname == null && productCategoryname.trim().equals("")) {
+                return false;
             }
+            ProductCategory newProductCategory = new ProductCategory();
+            newProductCategory.setCategoryName(productCategoryname);
+
+            String productCategoryAlias = productCategoryname.replace(" ", "_");
+            productCategoryAlias = productCategoryAlias.replace("/", "_");
+            productCategoryAlias = productCategoryAlias.replace("\\", "_");
+            productCategoryAlias = productCategoryAlias.replace("=", "_");
+            productCategoryAlias = productCategoryAlias.replace("\"", "_");
+            productCategoryAlias = productCategoryAlias.replace("'", "_");
+            productCategoryAlias = productCategoryAlias.replace("`", "_");
+
+            newProductCategory.setAlias(productCategoryAlias);
+            transaction = session.beginTransaction();
+            session.save(newProductCategory);
+            transaction.commit();
+            return true;
+
         } catch (HibernateException e) {
             System.out.println("Error in insertProductCategory(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean deleteProductCategory(ProductCategory productcategory) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.delete(productcategory);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in deleteProductCategory(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean updateProductCategory(ProductCategory productcategory) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.update(productcategory);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in updateProductCategory(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 

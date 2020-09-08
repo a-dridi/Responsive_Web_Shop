@@ -26,7 +26,6 @@ and open the template in the editor.
 
         <div class="sitecontent">
 
-
             <p:tabMenu activeIndex="2">
                 <p:menuitem value="#{text.adminOrdersProductsTab}" outcome="admin_orders" icon="fa fa-fw fa-shopping-cart">
                 </p:menuitem>
@@ -72,17 +71,17 @@ and open the template in the editor.
                     <div class="col-sm-1">
                         <p:outputLabel value="#{text.addProductPrice}"/>
                     </div>
-                    <div class="col-sm-1">
-                        <p:inputText value="#{adminAddProduct.priceCurrencyUnit}" style="width: 100px"/> 
+                    <div class="col-sm-1" style="margin-right: 0px; padding-right: 0px">
+                        <p:inputText value="#{adminAddProduct.priceCurrencyUnit}" style="width: 100%"/> 
                     </div>
-                    <div class="col-sm-1" style="width: 5px">
-                        <h:outputText value="#{adminAddProduct.commaSeperator}" style="width: 5px; height: 20px; font-size: 25px; margin-left: 0px"/>
+                    <div class="col-sm-1" style="flex: 0 0 0.5%; width: 1px; margin-left: 0px; margin-left: 0px; margin-right: 0px; padding-right: 0px">
+                        <h:outputText value="#{adminAddProduct.commaSeperator}" style="width: 5px; height: 15px; font-size: 25px; margin-left: 0px"/>
+                    </div>
+                    <div class="col-sm-1" style="width: 5px; margin-left: 0px; margin-left: 0px; margin-right: 0px; padding-right: 0px">
+                        <p:inputText value="#{adminAddProduct.priceCentUnit}" style="width: 100%"/> 
                     </div>
                     <div class="col-sm-1">
-                        <p:inputText value="#{adminAddProduct.priceCentUnit}" style="width: 50px"/> 
-                    </div>
-                    <div class="col-sm-1">
-                        <p:outputLabel value="#{adminAddProduct.activeCurrency}"/>
+                        <p:outputLabel value="#{adminAddProduct.activeCurrency}" style="text-align:center; padding-top: 10px"/>
                     </div>
                 </div>
 

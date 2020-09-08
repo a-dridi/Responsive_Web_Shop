@@ -8,6 +8,7 @@ package at.adridi.responsivewebshop.controller;
 import at.adridi.responsivewebshop.model.Order;
 import at.adridi.responsivewebshop.model.ProductOrder;
 import at.adridi.responsivewebshop.model.dao.OrderDAO;
+import at.adridi.responsivewebshop.model.dao.SettingsDAO;
 import at.adridi.responsivewebshop.services.CheckoutProduct;
 import at.adridi.responsivewebshop.services.ShoppingCart;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import javax.inject.Inject;
 @ViewScoped
 public class OrderStatus implements Serializable {
 
+    private SettingsDAO settingsDao = new SettingsDAO();
     private OrderDAO orderDao = new OrderDAO();
     ResourceBundle text = FacesContext.getCurrentInstance().getApplication().getResourceBundle(FacesContext.getCurrentInstance(), "text");
     private String email = "";
@@ -43,6 +45,7 @@ public class OrderStatus implements Serializable {
     private List<ProductOrder> selectedOrderedProducts;
     @Inject
     private FacesContext orderstatusFacesContext;
+    private String shopName = "My Shop";
 
     public OrderStatus() {
         //Load items in checkout and create checkout button text
@@ -54,6 +57,9 @@ public class OrderStatus implements Serializable {
         }
         ShoppingCart currentShoppingCartState = new ShoppingCart();
         this.checkoutButtonText = currentShoppingCartState.getShoppingCartStatusString();
+        if (this.settingsDao.getSettingBySettingkey("shopName") != null) {
+            this.shopName = this.settingsDao.getSettingBySettingkey("shopName").getSettingValue();
+        }
     }
 
     public void loadStatus() {
@@ -102,6 +108,14 @@ public class OrderStatus implements Serializable {
         }
     }
 
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+    
     public ResourceBundle getText() {
         return text;
     }

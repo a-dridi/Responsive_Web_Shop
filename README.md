@@ -10,6 +10,10 @@ Your customers can order products directly without registration. They can pay th
 
 This application is multilingual (i18n). Translation is not finished. You can translate and add another languages in the folder "languages" in the folder "resources". 
 
+## Video of the application
+
+https://youtu.be/XfQeOiCm28g
+
 
 ## Configuration - Installation
 
@@ -26,5 +30,5 @@ Copy this "war" file to the folder "webapps" of your web server "Apache Tomee Pl
 * See also License file
 
 ## Screenshots
-
+![Screenshot 3 of Application Responsive Web shop](https://raw.githubusercontent.com/a-dridi/Responsive_Web_Shop/master/screenshot3.PNG)
 ![Screenshot 2 of Application Responsive Web shop](https://raw.githubusercontent.com/a-dridi/Responsive_Web_Shop/master/screenshot2.PNG)

@@ -11,15 +11,27 @@ and open the template in the editor.
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">#{mainShopPage.shopName}</a>
+
+        <div class="top-contact-header" 
+             style="display: flex;
+             background-color: #fbf7d6; 
+             padding: 5px 10px 5px 10px;">
+            <div class="address-company-name" style="width: 70%">
+                <h:outputText value="#{mainShopPage.companyName}" escape="false" />
+            </div>
+            <div class="contact-info" style="width: 30%; text-align: right">
+                <h:outputText value="#{mainShopPage.contactInfo}" escape="false" />
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="color: white; background: ">
+            <a class="navbar-brand" href="/responsiveWebShop/" style="font-size: 20px;">#{mainShopPage.shopName}</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="MENU">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="/responsiveWebShop/">#{text.homeMainMenu} <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">

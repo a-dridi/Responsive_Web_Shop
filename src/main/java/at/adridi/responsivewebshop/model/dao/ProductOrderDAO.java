@@ -38,7 +38,6 @@ public class ProductOrderDAO implements AutoCloseable, Serializable{
             Query query = session.createQuery("FROM ProductOrder WHERE productor_order_id=:orderIdValue");
             query.setParameter("orderIdValue", order_id);
             return query.list();
-
         } catch (HibernateException e) {
             System.out.println("Error in getAllProductOrderByOrderId(): " + e);
             return null;
@@ -50,62 +49,60 @@ public class ProductOrderDAO implements AutoCloseable, Serializable{
     public boolean addProductOrder(ProductOrder productorder) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.save(productorder);
             transaction.commit();
-            returnValue = true;
-
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in addProductOrder(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean deleteProductOrder(ProductOrder productorder) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.delete(productorder);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in deleteProductOrder(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean updateProductOrder(ProductOrder productorder) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.update(productorder);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in updateProductOrder(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 

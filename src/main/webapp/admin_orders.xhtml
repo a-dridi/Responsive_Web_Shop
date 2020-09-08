@@ -41,7 +41,7 @@ and open the template in the editor.
                 <p:dataGrid var="orderscustomers" value="#{adminOrdersController.customerOrders}" columns="3" layout="grid"
                             rows="9" paginator="true" id="ordersGrid"
                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PageLinks}  {LastPageLink}"
-                            rowsPerPageTemplate="6,12,24,48,96">
+                            rowsPerPageTemplate="6,12,24,48,96" emptyMessage="#{text.emptyNoOrders}">
 
                     <f:facet name="header">
                         #{text.ordersProductsHeader}

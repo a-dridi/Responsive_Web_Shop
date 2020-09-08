@@ -17,7 +17,7 @@ import org.hibernate.Transaction;
  *
  * @author A.Dridi
  */
-public class SettingsDAO implements AutoCloseable, Serializable{
+public class SettingsDAO implements AutoCloseable, Serializable {
 
     public List<Settings> getAllSettings() {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -54,62 +54,60 @@ public class SettingsDAO implements AutoCloseable, Serializable{
     public boolean addSettings(Settings settings) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.save(settings);
             transaction.commit();
-            returnValue = true;
-
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in addSettings(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean deleteSettings(Settings settings) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.delete(settings);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in deleteSettings(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean updateSettings(Settings settings) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.update(settings);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in updateSettings(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 

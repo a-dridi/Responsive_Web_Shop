@@ -52,14 +52,13 @@ public class ProductDAO implements AutoCloseable, Serializable {
 
     }
 
-    public List<Product> getProductByProductCategory(Integer productCategoryId) {
+    public List<Product> getProductListByProductCategory(Integer productCategoryId) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            Query query = session.createQuery("SELECT product.* FROM Product product INNER JOIN product.product_category_id productcategory WHERE product.category=:productCategoryId");
+            Query query = session.createQuery("FROM Product WHERE category_category_id=:productCategoryId");
             query.setParameter("productCategoryId", productCategoryId);
             List<Product> productsOfCategory = query.list();
             return productsOfCategory;
-
         } catch (HibernateException e) {
             System.out.println("Error in getProductByProductCategory(): " + e);
             return null;
@@ -99,62 +98,60 @@ public class ProductDAO implements AutoCloseable, Serializable {
     public boolean addProduct(Product product) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.save(product);
             transaction.commit();
-            returnValue = true;
-
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in addProduct(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean deleteProduct(Product product) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.delete(product);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in deleteProduct(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
     public boolean updateProduct(Product product) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        boolean returnValue = false;
 
         try {
             transaction = session.beginTransaction();
             session.update(product);
             transaction.commit();
+            return true;
         } catch (HibernateException e) {
             System.out.println("Error in updateProduct(): " + e);
             if (transaction != null) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             session.close();
-            return returnValue;
         }
     }
 
