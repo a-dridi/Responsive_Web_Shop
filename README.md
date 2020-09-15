@@ -3,10 +3,11 @@
 Alpha release. In development. 
 * Production versions are also available per request. 
 
+![Gif of Application Responsive Web shop](https://raw.githubusercontent.com/a-dridi/Responsive_Web_Shop/master/responsive-web-shop.gif)
+
+
 This is a responsive web shop that is written in JSF and uses Postgresql as a database.
 Your customers can order products directly without registration. They can pay through Paypal. An order of a customer can be checked by entering the customer email and order number. 
-
-![Screenshot of Application Responsive Web shop](https://raw.githubusercontent.com/a-dridi/Responsive_Web_Shop/master/screenshot.PNG)
 
 This application is multilingual (i18n). Translation is not finished. You can translate and add another languages in the folder "languages" in the folder "resources". 
 
@@ -30,5 +31,6 @@ Copy this "war" file to the folder "webapps" of your web server "Apache Tomee Pl
 * See also License file
 
 ## Screenshots
+![Screenshot of Application Responsive Web shop](https://raw.githubusercontent.com/a-dridi/Responsive_Web_Shop/master/screenshot.PNG)
 ![Screenshot 3 of Application Responsive Web shop](https://raw.githubusercontent.com/a-dridi/Responsive_Web_Shop/master/screenshot3.PNG)
 ![Screenshot 2 of Application Responsive Web shop](https://raw.githubusercontent.com/a-dridi/Responsive_Web_Shop/master/screenshot2.PNG)
